@@ -23,6 +23,11 @@ public class TimeClientHandler implements Runnable{
     private SocketChannel socketChannel;
     private volatile boolean stop;
 
+    /**
+     * 初始化NIO的多路复用器和SocketChannel对象。
+     * 创建SockeChannel之后，需要将其设置为异步非阻塞模式。
+     * 可以设置SocketChannel的TCP参数，例如接收和发送的TCP缓冲区大小
+     */
     public TimeClientHandler(String host, int port) {
         this.host = host == null ? "127.0.0.1" : host;
         this.port = port;
@@ -38,6 +43,9 @@ public class TimeClientHandler implements Runnable{
 
     @Override
     public void run() {
+        /**
+         * 用于发送连接请求
+         */
         try {
             doConnect();
         } catch (IOException e) {
@@ -69,6 +77,10 @@ public class TimeClientHandler implements Runnable{
                 System.exit(1);
             }
         }
+
+        /**
+         * 多路复用器关闭后，所有注册在上面的Channel和Pipe等资源都会被自动去注册并关闭，所以不需要重复释放资源
+         */
         if (selector != null) {
             try {
                 selector.close();
@@ -112,6 +124,9 @@ public class TimeClientHandler implements Runnable{
         }
     }
 
+    /**
+     * 对
+     */
     private void doConnect() throws IOException {
         //如果直接链接成功，则注册到多路复用器上，发送请求消息，读应答
         if (socketChannel.connect(new InetSocketAddress(host, port))) {
