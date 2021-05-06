@@ -33,6 +33,9 @@ public class TcpNettyTimeClient {
                      * channel设置为NioSocketChannel
                      */
                     .channel(NioSocketChannel.class)
+                    /**
+                     * 提高数据的实时性
+                     */
                     .option(ChannelOption.TCP_NODELAY, true)
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
